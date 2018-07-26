@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dist="http://schemas.android.com/apk/distribution"
+    package="com.gjxhlan.dynamicfeatures"
+    split="dynamicFeature">
+
+    <dist:module
+        dist:onDemand="true"
+        dist:title="@string/module_dynamicFeature">
+        <dist:fusing dist:include="true" />
+    </dist:module>
+
+    <application>
+        <activity android:name="com.gjxhlan.dynamicfeatures.DynamicFeatureActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+

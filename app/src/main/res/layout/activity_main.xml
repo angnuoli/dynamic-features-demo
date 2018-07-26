@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test Android Dynamic Features!"
+        android:padding="24dp" />
+    <Button
+        android:id="@+id/show_images_collection_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Load module"
+        android:drawablePadding="5dp"/>
+
+    <Button
+        android:id="@+id/uninstall_module"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unintall module"
+        android:drawablePadding="5dp"/>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/progress_text"
+        style="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="loading"
+        android:visibility="gone"
+        />
+
+</LinearLayout>
