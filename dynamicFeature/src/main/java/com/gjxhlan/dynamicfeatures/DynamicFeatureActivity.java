@@ -43,8 +43,7 @@ public class DynamicFeatureActivity extends AppCompatActivity {
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             ImageView imageView = new ImageView(getBaseContext());
             imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 500));
-            ViewHolder holder = new ViewHolder(imageView);
-            return holder;
+            return new ViewHolder(imageView);
         }
 
         @Override
@@ -66,7 +65,7 @@ public class DynamicFeatureActivity extends AppCompatActivity {
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
         }
     }
