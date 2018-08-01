@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gjxhlan.dynamicfeaturesdemo">
 
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <application android:name="com.google.android.play.core.splitcompat.SplitCompatApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

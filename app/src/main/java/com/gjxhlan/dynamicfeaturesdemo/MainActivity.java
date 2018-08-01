@@ -1,18 +1,23 @@
 package com.gjxhlan.dynamicfeaturesdemo;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.play.core.splitinstall.SplitInstallHelper;
 import com.google.android.play.core.splitinstall.SplitInstallManager;
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory;
 import com.google.android.play.core.splitinstall.SplitInstallRequest;
@@ -33,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
     private final String moduleName = "dynamicFeature";
     private final String packageName = "com.gjxhlan.dynamicfeatures";
     private final String dynamicFeatureActivity = "com.gjxhlan.dynamicfeatures.DynamicFeatureActivity";
-    Button showImageButton, uninstall;
+    private final String dynamicFeatureActivity1 = "com.gjxhlan.dynamicfeatures.ondemand.DynamicFeatureActivity1";
+
+    Button showImageButton, uninstall, immediatelyShow;
     TextView progressText;
     ProgressBar progressBar;
 
@@ -59,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeViews() {
         showImageButton = findViewById(R.id.show_images_collection_button);
+        immediatelyShow = findViewById(R.id.show_images_collection_button_no_restart);
         if (manager.getInstalledModules().contains(moduleName)) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setClassName(packageName, dynamicFeatureActivity);
@@ -66,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 showImageButton.setText("Wait for installing module");
             } else {
                 showImageButton.setText("Show Images Collection");
+                immediatelyShow.setVisibility(View.VISIBLE);
             }
         }
         uninstall = findViewById(R.id.uninstall_module);
@@ -75,8 +84,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupClickListerner() {
+        Drawable save = showImageButton.getBackground();
+        Drawable save1 = uninstall.getBackground();
+        Drawable save2 = immediatelyShow.getBackground();
+        showImageButton.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    showImageButton.setBackgroundColor(getResources().getColor(R.color.clr_pressed, getTheme()));
+                    break;
+                case MotionEvent.ACTION_UP:
+                    showImageButton.setBackground(save);
+            }
+            return false;
+        });
+
         showImageButton.setOnClickListener(view -> loadAndLaunchModule(moduleName));
         uninstall.setOnClickListener(view -> requestUninstall());
+        uninstall.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    uninstall.setBackgroundColor(getResources().getColor(R.color.clr_pressed, getTheme()));
+                    break;
+                case MotionEvent.ACTION_UP:
+                    uninstall.setBackground(save1);
+            }
+            return false;
+        });
+        immediatelyShow.setOnClickListener(view -> launchAcitivity(dynamicFeatureActivity1));
+        immediatelyShow.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    immediatelyShow.setBackgroundColor(getResources().getColor(R.color.clr_pressed, getTheme()));
+                    break;
+                case MotionEvent.ACTION_UP:
+                    immediatelyShow.setBackground(save2);
+            }
+            return false;
+        });
     }
 
     private void loadAndLaunchModule(String name) {
@@ -124,13 +168,13 @@ public class MainActivity extends AppCompatActivity {
                             }
                             break;
                         case SplitInstallSessionStatus.INSTALLED:
-                            Context context = getBaseContext();
-                            try {
-                                Context newContext = context.createPackageContext(getPackageName(), 0);
-                            } catch (PackageManager.NameNotFoundException e) {
-                                e.printStackTrace();
+                            if (26 <= Build.VERSION.SDK_INT) {
+                                Log.d("angnuo_test", String.valueOf(Build.VERSION.SDK_INT));
+                                SplitInstallHelper.updateAppInfo(getApplicationContext());
                             }
-                            onSuccessfulLoad(module, true);
+                            showRestartDialog();
+                            immediatelyShow.setVisibility(View.VISIBLE);
+                            hideProgress();
                             break;
                         case SplitInstallSessionStatus.INSTALLING:
                             displayLoadingState(state, "Downloading " + module);
@@ -141,6 +185,25 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private void showRestartDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Message");
+        builder.setMessage("For new feature onboard, please restart Launcher.");
+        builder.setIcon(R.mipmap.ic_launcher_round);
+
+        builder.setCancelable(true);
+        // confirm
+        builder.setPositiveButton("Restart", (dialog, which) -> {
+            System.exit(0);
+            dialog.dismiss();
+        });
+        // dismiss
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void displayLoadingState(SplitInstallSessionState state, String message) {
@@ -177,10 +240,7 @@ public class MainActivity extends AppCompatActivity {
     private void launchAcitivity(String className) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setClassName(getPackageName(), className);
-        if (getPackageManager().queryIntentActivities(intent, 0).size() != 0) {
-            Log.d(TAG, getPackageManager().queryIntentActivities(intent, 0).toString());
-            startActivity(intent);
-        }
+        startActivity(intent);
     }
 
     private void toastAndLog(String text) {

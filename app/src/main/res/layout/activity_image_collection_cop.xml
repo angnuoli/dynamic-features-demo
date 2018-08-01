@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/image_container"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center">
 
     <TextView
-        android:id="@+id/answer_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is image collection page from show image button. The layout is in dynamicFeature module."
+        android:text="This is image collection page from immediately show button. The layout is in base module."
         android:padding="24dp" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/images_list"
+        android:id="@+id/images_list_cop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </LinearLayout>

@@ -21,6 +21,14 @@
         android:drawablePadding="5dp"/>
 
     <Button
+        android:id="@+id/show_images_collection_button_no_restart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="Immediately show images"
+        android:drawablePadding="5dp"/>
+
+    <Button
         android:id="@+id/uninstall_module"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
